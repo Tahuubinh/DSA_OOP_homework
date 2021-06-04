@@ -1,0 +1,63 @@
+# https://docs.google.com/document/d/17-LKLpIn6IeBWAd8FzrUi7Tk9sXJX0wra-VwP1Nypik/edit?fbclid=IwAR1cKYFKyZrj4z90LRvzoJa6oAsrIzbuoIWvbOMLzDEfi5fJtHue_ByMNs0
+
+import numpy as np
+import copy
+print("Hello L.Chi")
+
+ship_money = np.array([[1050000, 1300000, 1330000, 2275000, 1650000, 3265000],
+                       [1965000, 2520000, 1690000, 1210000, 2130000, 1360000],
+                       [1230000, 1450000, 980000, 1390000, 1220000, 1740000],
+                       [1230000, 1500000, 1020000,1440000,1390000,2100000],
+                       [990000,1220000,660000,1620000,1140000,2290000],
+                       [940000,1575000,1050000,1610000,1520000,2780000]])
+
+demands = ([550, 530, 370, 420, 330, 440])
+
+x = np.zeros(6)
+y = np.zeros(6)
+y_num = np.zeros(6)   # number of destinations for each factory
+max = 0
+result = np.zeros(6)  # factory for each destination
+temp = np.zeros(6) # for debug
+temp2 = np.zeros(6) # for debug
+z = 0 # for debug
+
+def isPositive(x):
+    return 1 if x > 0 else 0
+
+def backTrack(i):
+  
+    # Using backtracking with 6^6 cases
+    
+    if i > 5:
+        global z
+        global temp
+        global temp2
+        global max
+        global result
+        capacities = np.zeros(6)
+        for count in range(6):
+            capacities[count] = np.sum(demands[k] if x[k] == count else 0 for k in range(6))
+        # if (z < 5):
+        #     z+=1
+        #     print (np.all(capacities <= 1000))
+        if (np.all(capacities <= 1000)):
+            y = np.array([isPositive(x) for x in y_num])
+            value = 1444000000 - np.sum(ship_money[int(x[i])][i] for i in range(6)) - 200000000*np.sum(y)
+            if (value > max):
+                max = value
+                result = copy.copy(x)
+                # temp = copy.copy(capacities)
+                # temp2 = copy.copy(y_num)
+    else:
+        for j in range(6):
+            x[i] = j          # x[j][i] = 1, x[][i] = 0 otherwise
+            y_num[j] = y_num[j] + 1
+            backTrack(i+1)
+            x[i] = 0          #reset
+            y_num[j] = y_num[j] - 1
+backTrack(0)
+print ("Max =", max)
+print ("Factory of each destination: ", result + 1)
+# print (temp)
+# print (temp2)
