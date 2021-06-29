@@ -1,3 +1,3 @@
 # Homework
 
-This repo contains my DSA assignments.
+This repo contains my DSA, OOP assignments.
